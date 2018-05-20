@@ -26,6 +26,10 @@ function connect() {
             console.log('/topic/news greeting:', greeting);
             showGreeting(JSON.parse(greeting.body).name);
         });
+        stompClient.subscribe('/topic/news', function (greeting) {
+            console.log('/topic/news greeting:', greeting);
+            showGreeting(JSON.parse(greeting.body).name);
+        });
     });
 }
 
@@ -41,6 +45,12 @@ function sendName() {
     stompClient.send("/app/user", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
+function getFriends() {
+    var uuid = '0f24d8a4-9176-42a5-bc52-affb483e3308';
+    stompClient.send("/app/friends.get_all", {}, uuid);
+    //console.log('stompClient.send:', stompClient.send("/app/friends.get_all", {}, uuid));
+}
+
 function showGreeting(message) {
     $("#userinfo").append("<tr><td>" + message + "</td></tr>");
 }
@@ -51,5 +61,6 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
+    $( "#getfriends" ).click(function() { getFriends(); });
     $( "#send" ).click(function() { sendName(); });
 });
